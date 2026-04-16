@@ -32,8 +32,7 @@ lobster_traps <- read_csv(here("data/Lobster_Trap_Counts_All_Years_20210519.csv"
 ## Summary of abstract:
 
 ## Visualization
-<<<<<<< HEAD
+
 
 ## Discussion
-=======
->>>>>>> 96b0a5517154288f7a31f46907859b5dedf88baf
+
