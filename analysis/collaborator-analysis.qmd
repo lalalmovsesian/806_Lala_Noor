@@ -2,3 +2,24 @@
 title: Collaborator Analysis
 author: Noor Abuzahriyeh
 ---
+
+## Exercise: Explore, Clean, and Wrangle Data
+
+```{r}
+# load necessary libraries
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(here)
+```
+
+```{r}
+# read in the data
+lobster_traps <- read.csv(here::here("data/Lobster_Trap_Counts_All_Years_20210519.csv"))
+```
+
+```{r}
+# view data
+head(lobster_traps)
+```
