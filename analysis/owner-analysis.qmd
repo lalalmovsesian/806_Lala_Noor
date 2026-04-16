@@ -12,11 +12,113 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(here)
+library (forcats)
 
 ```
 Loading data:
 
 ```{r}
-lobster_abundance <- read_csv(here::here("data/Lobster_Abundance_All_Years_20220829.csv"))
+lobster_abundance <- read_csv(here("data/Lobster_Abundance_All_Years_20220829.csv"))
+```
+size na
+
+```{r}
+lobster_abundance <- lobster_abundance %>% 
+    mutate(SIZE_MM = na_if(SIZE_MM, -99999))
+
+```
+
+filtering sites
+```{r}
+not_napl <- lobster_abundance %>% 
+    filter(SITE != "NAPL")
+```
+
+subset with site = Arroyo Quemado and carapace length > 70mm
+
+```{r}
+aque_70mm <- lobster_abundance %>% 
+    filter(SITE == "AQUE" & SIZE_MM >= 70)
+```
+
+
+
+checking max size 
+```{r}
+# `group_by() %>% summarize()` practice
+
+max_lobster <- lobster_abundance %>% 
+  group_by(SITE, MONTH) %>% 
+  summarize(MAX_LENGTH = max(SIZE_MM, na.rm = TRUE))
+```
+
+## Exercise: Data Visualization
+
+```{r}
+## Run this chunk to test exercises ##
+
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(here)
+
+lobster_abundance <- read_csv(here("data/Lobster_Abundance_All_Years_20220829.csv")) %>% 
+    mutate(SIZE_MM = na_if(SIZE_MM, -99999))
+```
+
+```{r}
+ggplot(data = lobster_abundance, 
+       aes(x = SIZE_MM, fill = SITE)) +
+    geom_histogram() +
+    facet_wrap(~SITE) +
+ggtitle("Lobster size frequency in each site") +
+  theme_light() +
+    theme(legend.position = "bottom",
+          legend.title = element_blank()) +
+  scale_fill_viridis_d()
+
+```
+ Creating line graph
+ 
+```{r}
+lobsters_summarize <- lobster_abundance %>% 
+  group_by(SITE, YEAR) %>% 
+  summarize(COUNT = n()) 
+  
+```
+```{r}
+# line and point plot
+ggplot(data = lobsters_summarize, aes(x = YEAR, y = COUNT)) +
+  geom_point(aes(color = SITE)) +
+  geom_line(aes(color = SITE)) +
+  ggtitle("Lobster annual abundance in each site") +
+  theme_light() +
+    theme(legend.position = "bottom",
+          legend.title = element_blank()) +
+  scale_color_viridis_d()
+```
+```{r}
+lobster_size_lrg <- lobster_abundance %>%
+    filter(YEAR %in% c(2019, 2020, 2021)) %>%
+    mutate(SIZE_BIN = if_else(SIZE_MM <= 70, true = "small", false = "large")) %>%
+    group_by(SITE, SIZE_BIN) %>%
+    summarize(COUNT = n()) %>%
+    drop_na()
+```
+ 
+```{r}
+# bar plot
+ggplot(data = lobster_size_lrg, aes(x = fct_reorder(SITE, COUNT) , y = COUNT , fill = SIZE_BIN
+                                    ))  +
+scale_fill_viridis_d(option = "plasma") +
+    geom_col() +
+   labs(x = "Site",
+         y = "Count",
+         title = "Lobster size count") +
+  theme_light() +
+    theme(legend.position = "bottom",
+          legend.title = element_blank())
+
 ```
 
