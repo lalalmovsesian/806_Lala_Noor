@@ -1,6 +1,7 @@
 ---
 title: Lobster Report
 author: Lala Movsesian and Noor Abuzahriyeh
+toc: true
 ---
 
 ## Setup
@@ -23,7 +24,8 @@ Loading data:
 
 ```{r}
 # lobster abundance data
-lobster_abundance <- read_csv(here("data/Lobster_Abundance_All_Years_20220829.csv"))
+lobster_abundance <- read_csv(here("data/Lobster_Abundance_All_Years_20220829.csv")) %>% 
+    mutate(SIZE_MM = na_if(SIZE_MM, -99999))
 
 # lobster traps data
 lobster_traps <- read_csv(here("data/Lobster_Trap_Counts_All_Years_20210519.csv"))
@@ -34,6 +36,59 @@ this is the summary
 
 ## Visualization
 
+### Abundance per site
+
+```{r}
+ggplot(data = lobster_abundance, 
+       aes(x = SIZE_MM, fill = SITE)) +
+    geom_histogram() +
+    facet_wrap(~SITE) +
+ggtitle("Lobster size frequency in each site") +
+  theme_light() +
+    theme(legend.position = "bottom",
+          legend.title = element_blank()) +
+  scale_fill_viridis_d()
+
+```
+
+### Annual abundance in each site
+```{r}
+lobsters_summarize <- lobster_abundance %>% 
+  group_by(SITE, YEAR) %>% 
+  summarize(COUNT = n()) 
+# line and point plot
+ggplot(data = lobsters_summarize, aes(x = YEAR, y = COUNT)) +
+  geom_point(aes(color = SITE)) +
+  geom_line(aes(color = SITE)) +
+  ggtitle("Lobster annual abundance in each site") +
+  theme_light() +
+    theme(legend.position = "bottom",
+          legend.title = element_blank()) +
+  scale_color_viridis_d()
+```
+
+### Lobster large/small count comparison 
+
+```{r}
+lobster_size_lrg <- lobster_abundance %>%
+    filter(YEAR %in% c(2019, 2020, 2021)) %>%
+    mutate(SIZE_BIN = if_else(SIZE_MM <= 70, true = "small", false = "large")) %>%
+    group_by(SITE, SIZE_BIN) %>%
+    summarize(COUNT = n()) %>%
+    drop_na()
+
+# bar plot
+ggplot(data = lobster_size_lrg, aes(x = fct_reorder(SITE, COUNT) , y = COUNT , fill = SIZE_BIN
+                                    ))  +
+scale_fill_viridis_d(option = "plasma") +
+    geom_col() +
+   labs(x = "Site",
+         y = "Count",
+         title = "Lobster size count") +
+  theme_light() +
+    theme(legend.position = "bottom",
+          legend.title = element_blank())
+```
 
 ## Discussion
 
