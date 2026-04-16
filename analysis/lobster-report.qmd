@@ -32,6 +32,7 @@ lobster_traps <- read_csv(here("data/Lobster_Trap_Counts_All_Years_20210519.csv"
 ```
 
 ## Summary of abstract:
+
 this is the summary
 
 ## Visualization
@@ -52,6 +53,7 @@ ggtitle("Lobster size frequency in each site") +
 ```
 
 ### Annual abundance in each site
+
 ```{r}
 lobsters_summarize <- lobster_abundance %>% 
   group_by(SITE, YEAR) %>% 
@@ -67,7 +69,7 @@ ggplot(data = lobsters_summarize, aes(x = YEAR, y = COUNT)) +
   scale_color_viridis_d()
 ```
 
-### Lobster large/small count comparison 
+### Lobster large/small count comparison
 
 ```{r}
 lobster_size_lrg <- lobster_abundance %>%
@@ -90,5 +92,53 @@ scale_fill_viridis_d(option = "plasma") +
           legend.title = element_blank())
 ```
 
-## Discussion
+### Total amount of traps set per year
 
+```{r}
+# generating a line plot for commerical traps by year
+
+# wrangling data first
+lobster_traps_summarize <- lobster_traps %>% 
+  mutate(SITE = toupper(SITE)) %>% #fix the to vs TO site issue
+  group_by(SITE,YEAR) %>% # grouping just the site and year columns
+  summarise(TOTAL_TRAPS = sum(TRAPS, na.rm = TRUE)) # finding the total number of traps per year
+
+# line plot
+ggplot(data = lobster_traps_summarize, aes(x = YEAR, y = TOTAL_TRAPS)) +
+  geom_line(aes(color = SITE)) +
+  labs(x = "Year",
+       y = "Total Traps",
+       title = "Lobster Traps by Year",
+       color = "Site") +
+  scale_x_continuous(breaks = seq(2012,2020, 2), expand = c(0,0)) +
+  scale_y_continuous(breaks = seq(0,1500,200), expand = c(0,0)) + # to set scale of axes and make sure y axis starts at 0
+  theme_bw() + # using minimal theme for blank background
+  theme(plot.title = element_text(hjust = 0.5)) # center the title name
+```
+
+### The fising pressure of lobster from the years 2019-2021 by site
+
+```{r}
+# creating a new data frame for data just from 2019-2021
+
+lobster_traps_fishing_pressure <- lobster_traps %>% 
+  filter(YEAR %in% c(2019, 2020, 2021)) %>% 
+  mutate(FISHING_PRESSURE = if_else(TRAPS >= 8, true = "high", false = "low")) %>% 
+  group_by(SITE, FISHING_PRESSURE) %>% 
+  summarize(COUNT = n()) %>% 
+  drop_na()
+
+# plotting the results
+ggplot(data = lobster_traps_fishing_pressure, aes(x = SITE, y = COUNT, fill = FISHING_PRESSURE)) +
+  geom_col() +
+  labs(x = "Site",
+       y = "Total Traps",
+       title = "Fishing Pressure by Year from 2019-2021") +
+  scale_fill_viridis_d() +
+  scale_x_discrete(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0))+
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust =1))
+```
+
+## Discussion
