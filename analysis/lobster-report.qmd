@@ -33,3 +33,5 @@ lobster_abundance <- read_csv(here("data/Lobster_Abundance_All_Years_20220829.cs
 ## Summary of abstract:
 
 ## Visualization
+
+## Discussion
