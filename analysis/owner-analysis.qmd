@@ -2,3 +2,21 @@
 title: Owner Analysis
 author: Lala Movsesian
 ---
+
+## “Exercise: Explore, Clean, and Wrangle Data
+
+Loading libraries:
+```{r}
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(here)
+
+```
+Loading data:
+
+```{r}
+lobster_abundance <- read_csv(here::here("data/Lobster_Abundance_All_Years_20220829.csv"))
+```
+
