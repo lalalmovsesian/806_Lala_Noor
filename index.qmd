@@ -1,26 +1,157 @@
 ---
-title: "pages"
-format: html
-editor: visual
+title: Lobster Report
+author: Lala Movsesian and Noor Abuzahriyeh
+toc: true
 ---
 
-## Quarto
+## Setup
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+Loading libraries:
 
 ```{r}
-1 + 1
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(here)
+library (forcats)
+library(viridis)
+
 ```
 
-You can add options to executable code like this
+Data from the link below on 04/16/2026 https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-sbc.77.8
+
+Loading data:
 
 ```{r}
-#| echo: false
-2 * 2
+# lobster abundance data
+lobster_abundance <- read_csv(here("data/Lobster_Abundance_All_Years_20220829.csv")) %>% 
+    mutate(SIZE_MM = na_if(SIZE_MM, -99999))
+
+# lobster traps data
+lobster_traps <- read_csv(here("data/Lobster_Trap_Counts_All_Years_20210519.csv")) %>%
+   mutate(TRAPS = na_if(TRAPS, -99999))
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+## Summary of abstract:
+
+This data shows the abundance, size and trap counts of the keystone species California spiny lobster (Panulirus interruptus) from Santa Barbara Channel. Two data collection sites are within Marine Protected Areas, while three are outside, to assess the effect of fishing on marine ecosystems.
+
+## Visualization
+
+### Abundance per site
+
+```{r}
+ggplot(data = lobster_abundance, 
+       aes(x = SIZE_MM, fill = SITE)) +
+    geom_histogram() +
+    facet_wrap(~SITE) +
+ggtitle("Lobster size frequency in each site") +
+  theme_light() +
+    theme(legend.position = "bottom",
+          legend.title = element_blank()) +
+  scale_fill_viridis_d()
+
+```
+
+### Annual abundance in each site
+
+```{r}
+lobsters_summarize <- lobster_abundance %>% 
+  group_by(SITE, YEAR) %>% 
+  summarize(COUNT = n()) 
+# line and point plot
+ggplot(data = lobsters_summarize, aes(x = YEAR, y = COUNT)) +
+  geom_point(aes(color = SITE)) +
+  geom_line(aes(color = SITE)) +
+  ggtitle("Lobster annual abundance in each site") +
+  theme_light() +
+    theme(legend.position = "bottom",
+          legend.title = element_blank()) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_color_viridis_d()
+```
+
+### Lobster large/small count comparison
+
+```{r}
+lobster_size_lrg <- lobster_abundance %>%
+    filter(YEAR %in% c(2019, 2020, 2021)) %>%
+    mutate(SIZE_BIN = if_else(SIZE_MM <= 70, true = "small", false = "large")) %>%
+    group_by(SITE, SIZE_BIN) %>%
+    summarize(COUNT = n()) %>%
+    drop_na()
+
+# bar plot
+ggplot(data = lobster_size_lrg, aes(x = fct_reorder(SITE, COUNT) , y = COUNT , fill = SIZE_BIN
+                                    ))  +
+scale_fill_viridis_d(option = "plasma") +
+    geom_col() +
+   labs(x = "Site",
+         y = "Count",
+         title = "Lobster size count") +
+  scale_x_discrete(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_light() +
+    theme(legend.position = "bottom",
+          legend.title = element_blank())
+```
+
+### Total amount of traps set per year
+
+```{r}
+# generating a line plot for commercial traps by year
+
+# wrangling data first
+lobster_traps_summarize <- lobster_traps %>% 
+  mutate(SITE = toupper(SITE)) %>% #fix the to vs TO site issue
+  group_by(SITE,YEAR) %>% # grouping just the site and year columns
+  summarise(TOTAL_TRAPS = sum(TRAPS, na.rm = TRUE)) # finding the total number of traps per year
+
+# line plot
+ggplot(data = lobster_traps_summarize, aes(x = YEAR, y = TOTAL_TRAPS)) +
+  geom_line(aes(color = SITE)) +
+  labs(x = "Year",
+       y = "Total Traps",
+       title = "Lobster Traps by Year",
+       color = "Site") +
+  scale_x_continuous(breaks = seq(2012,2020, 2), expand = c(0,0)) +
+  scale_y_continuous(breaks = seq(0,1500,200), expand = c(0,0)) + # to set scale of axes and make sure y axis starts at 0
+  theme_bw() + # using minimal theme for blank background
+  theme(plot.title = element_text(hjust = 0.5)) # center the title name
+```
+
+### The fishing pressure of lobster from the years 2019-2021 by site
+
+```{r}
+# creating a new data frame for data just from 2019-2021
+
+lobster_traps_fishing_pressure <- lobster_traps %>% 
+  filter(YEAR %in% c(2019, 2020, 2021)) %>% 
+  mutate(FISHING_PRESSURE = if_else(TRAPS >= 8, true = "high", false = "low")) %>% 
+  group_by(SITE, FISHING_PRESSURE) %>% 
+  summarize(COUNT = n()) %>% 
+  drop_na()
+
+# plotting the results
+ggplot(data = lobster_traps_fishing_pressure, aes(x = fct_reorder(SITE, COUNT), y = COUNT, fill = FISHING_PRESSURE)) +
+  geom_col() +
+  labs(x = "Site",
+       y = "Total Traps",
+       title = "Fishing Pressure by Year from 2019-2021") +
+  scale_fill_viridis_d() +
+  scale_x_discrete(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0))+
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust =1))
+```
+
+## Discussion
+
+The size and abundance data shows some differences between sites within MAPs vs sites with fishing activities. From the MPAs: Isla Vista showed the highest abundance, and Naples had the larger ratio of bigger vs smaller lobsters, showing the effectiveness of MPAs.
+
+The trap count data shows that through the years, there are fluctuations in the amount of lobster traps people set. In particular, it appears that years where there were many traps set are followed by years where fewer traps are set, perhaps due to lobster abundance. In 2015 and 2018 for example, fewer traps were set up, but in the years following, 2016 and 2018, there was a peak in the amount of traps set across most sites. Looking at the abundance data, it appears that there were fewer lobsters in 2016 and 2018, in line with there being more traps. Perhaps the lobsters were being caught before they could be counted. The fishing pressure data from 2019-2021 also correlates with the trap count, with the CARP location having a high degree of fishing pressure as well as having many traps set.
+
+------------------------------------------------------------------------
+
+## 
