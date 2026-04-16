@@ -2,3 +2,34 @@
 title: Lobster Report
 author: Lala Movsesian and Noor Abuzahriyeh
 ---
+
+
+## Setup
+
+Loading libraries:
+
+```{r}
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(here)
+library (forcats)
+
+```
+
+
+Data from the link below on 04/16/2026
+ https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-sbc.77.8
+ 
+ 
+Loading data:
+
+```{r}
+lobster_abundance <- read_csv(here("data/Lobster_Abundance_All_Years_20220829.csv"))
+```
+
+
+## Summary of abstract:
+
+## Visualization
