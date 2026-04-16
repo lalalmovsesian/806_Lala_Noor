@@ -28,12 +28,13 @@ lobster_abundance <- read_csv(here("data/Lobster_Abundance_All_Years_20220829.cs
     mutate(SIZE_MM = na_if(SIZE_MM, -99999))
 
 # lobster traps data
-lobster_traps <- read_csv(here("data/Lobster_Trap_Counts_All_Years_20210519.csv"))
+lobster_traps <- read_csv(here("data/Lobster_Trap_Counts_All_Years_20210519.csv")) %>%
+   mutate(TRAPS = na_if(TRAPS, -99999))
 ```
 
 ## Summary of abstract:
 
-this is the summary
+This data shows the abundance, size and trap counts of the keystone species California spiny lobster (Panulirus interruptus) from Santa Barbara Channel. Two data collection sites are within Marine Protected Areas, while three are outside, to assess the effect of fishing on marine ecosystems. 
 
 ## Visualization
 
@@ -66,6 +67,7 @@ ggplot(data = lobsters_summarize, aes(x = YEAR, y = COUNT)) +
   theme_light() +
     theme(legend.position = "bottom",
           legend.title = element_blank()) +
+  scale_x_continuous(expand = c(0,0)) +
   scale_color_viridis_d()
 ```
 
@@ -95,7 +97,7 @@ scale_fill_viridis_d(option = "plasma") +
 ### Total amount of traps set per year
 
 ```{r}
-# generating a line plot for commerical traps by year
+# generating a line plot for commercial traps by year
 
 # wrangling data first
 lobster_traps_summarize <- lobster_traps %>% 
@@ -129,7 +131,7 @@ lobster_traps_fishing_pressure <- lobster_traps %>%
   drop_na()
 
 # plotting the results
-ggplot(data = lobster_traps_fishing_pressure, aes(x = SITE, y = COUNT, fill = FISHING_PRESSURE)) +
+ggplot(data = lobster_traps_fishing_pressure, aes(x = fct_reorder(SITE, COUNT), y = COUNT, fill = FISHING_PRESSURE)) +
   geom_col() +
   labs(x = "Site",
        y = "Total Traps",
@@ -142,3 +144,4 @@ ggplot(data = lobster_traps_fishing_pressure, aes(x = SITE, y = COUNT, fill = FI
 ```
 
 ## Discussion
+The size and abundance data shows some differences between sites within MAPs vs sites with fishing activities. From the MPAs: Isla Vista showed the highest abundance, and Naples had the larger ratio of bigger vs smaller lobsters, showing the effectiveness of MPAs.
