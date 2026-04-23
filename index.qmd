@@ -35,7 +35,7 @@ lobster_traps <- read_csv(here("data/Lobster_Trap_Counts_All_Years_20210519.csv"
 
 ## Summary of abstract:
 
-This data shows the abundance, size and trap counts of the keystone species California spiny lobster (Panulirus interruptus) from Santa Barbara Channel. Two data collection sites are within Marine Protected Areas, while three are outside, to assess the effect of fishing on marine ecosystems.
+This data shows the abundance, size and trap counts of the keystone species California spiny lobster (*Panulirus interruptus*) from Santa Barbara Channel. Two data collection sites are within Marine Protected Areas, while three are outside, to assess the effect of fishing pressure on marine ecosystems.
 
 ## Visualization
 
@@ -128,13 +128,14 @@ ggplot(data = lobster_traps_summarize, aes(x = YEAR, y = TOTAL_TRAPS)) +
 
 lobster_traps_fishing_pressure <- lobster_traps %>% 
   filter(YEAR %in% c(2019, 2020, 2021)) %>% 
+  mutate(SITE = toupper(SITE)) %>% #fix the to vs TO site issue
   mutate(FISHING_PRESSURE = if_else(TRAPS >= 8, true = "high", false = "low")) %>% 
   group_by(SITE, FISHING_PRESSURE) %>% 
   summarize(COUNT = n()) %>% 
   drop_na()
 
 # plotting the results
-ggplot(data = lobster_traps_fishing_pressure, aes(x = fct_reorder(SITE, COUNT), y = COUNT, fill = FISHING_PRESSURE)) +
+ggplot(data = lobster_traps_fishing_pressure, aes(x = fct_reorder(SITE, COUNT, .fun = sum), y = COUNT, fill = FISHING_PRESSURE)) +
   geom_col() +
   labs(x = "Site",
        y = "Total Traps",
