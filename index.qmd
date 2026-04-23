@@ -1,12 +1,13 @@
 ---
 title: Lobster Report
-author: Lala Movsesian and Noor Abuzahriyeh
+authors: Lala Movsesian and Noor Abuzahriyeh
+date: "April 23, 2026"
 toc: true
 ---
 
 ## Setup
 
-Loading libraries:
+Loading libraries necessary for data visualization, wrangling, and analysis:
 
 ```{r}
 library(readr)
@@ -21,7 +22,7 @@ library(viridis)
 
 Data from the link below on 04/16/2026 https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-sbc.77.8
 
-Loading data:
+## Loading data
 
 ```{r}
 # lobster abundance data
@@ -33,7 +34,7 @@ lobster_traps <- read_csv(here("data/Lobster_Trap_Counts_All_Years_20210519.csv"
    mutate(TRAPS = na_if(TRAPS, -99999))
 ```
 
-## Summary of abstract:
+## Summary of abstract
 
 This data shows the abundance, size and trap counts of the keystone species California spiny lobster (*Panulirus interruptus*) from Santa Barbara Channel. Two data collection sites are within Marine Protected Areas (MPAs), sites Naples and Isla Vista, while three are outside, being Arroyo Quemado, Mohawk, and Carpinteria, to assess the effect of fishing pressure on marine ecosystems.
 

@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Lala Movsesian and Noor Abuzahriyeh">
+<meta name="dcterms.date" content="2026-04-23">
 
 <title>Lobster Report</title>
 <style>
@@ -81,7 +81,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#setup" id="toc-setup" class="nav-link active" data-scroll-target="#setup">Setup</a></li>
-  <li><a href="#summary-of-abstract" id="toc-summary-of-abstract" class="nav-link" data-scroll-target="#summary-of-abstract">Summary of abstract:</a></li>
+  <li><a href="#loading-data" id="toc-loading-data" class="nav-link" data-scroll-target="#loading-data">Loading data</a></li>
+  <li><a href="#summary-of-abstract" id="toc-summary-of-abstract" class="nav-link" data-scroll-target="#summary-of-abstract">Summary of abstract</a></li>
   <li><a href="#visualization" id="toc-visualization" class="nav-link" data-scroll-target="#visualization">Visualization</a>
   <ul class="collapse">
   <li><a href="#abundance-per-site" id="toc-abundance-per-site" class="nav-link" data-scroll-target="#abundance-per-site">Abundance per site</a></li>
@@ -113,6 +114,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 23, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -124,7 +131,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<p>Loading libraries:</p>
+<p>Loading libraries necessary for data visualization, wrangling, and analysis:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -170,7 +177,9 @@ Attaching package: 'dplyr'</code></pre>
 </div>
 </div>
 <p>Data from the link below on 04/16/2026 https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-sbc.77.8</p>
-<p>Loading data:</p>
+</section>
+<section id="loading-data" class="level2">
+<h2 class="anchored" data-anchor-id="loading-data">Loading data</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># lobster abundance data</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>lobster_abundance <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data/Lobster_Abundance_All_Years_20220829.csv"</span>)) <span class="sc">%&gt;%</span> </span>
@@ -203,7 +212,7 @@ date (1): DATE
 </div>
 </section>
 <section id="summary-of-abstract" class="level2">
-<h2 class="anchored" data-anchor-id="summary-of-abstract">Summary of abstract:</h2>
+<h2 class="anchored" data-anchor-id="summary-of-abstract">Summary of abstract</h2>
 <p>This data shows the abundance, size and trap counts of the keystone species California spiny lobster (<em>Panulirus interruptus</em>) from Santa Barbara Channel. Two data collection sites are within Marine Protected Areas (MPAs), sites Naples and Isla Vista, while three are outside, being Arroyo Quemado, Mohawk, and Carpinteria, to assess the effect of fishing pressure on marine ecosystems.</p>
 </section>
 <section id="visualization" class="level2">
