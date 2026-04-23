@@ -13,6 +13,7 @@ library(ggplot2)
 library(tidyr)
 library(here)
 library(viridis)
+library(forcats)
 ```
 
 ```{r}
@@ -80,6 +81,7 @@ ggplot(data = lobster_traps_summarize, aes(x = YEAR, y = TOTAL_TRAPS)) +
 
 lobster_traps_fishing_pressure <- lobster_traps %>% 
   filter(YEAR %in% c(2019, 2020, 2021)) %>% 
+  mutate(SITE = toupper(SITE)) %>% #fix the to vs TO site issue
   mutate(FISHING_PRESSURE = if_else(TRAPS >= 8, true = "high", false = "low")) %>% 
   group_by(SITE, FISHING_PRESSURE) %>% 
   summarize(COUNT = n()) %>% 
@@ -89,8 +91,12 @@ lobster_traps_fishing_pressure <- lobster_traps %>%
 
 ```{r}
 # creating a bar plot from the filtered data
-ggplot(data = lobster_traps_fishing_pressure, aes(x = SITE, y = COUNT, fill = FISHING_PRESSURE)) +
+# plotting the results
+ggplot(data = lobster_traps_fishing_pressure, aes(x = fct_reorder(SITE, COUNT, .fun = sum), y = COUNT, fill = FISHING_PRESSURE)) +
   geom_col() +
+  labs(x = "Site",
+       y = "Total Traps",
+       title = "Fishing Pressure by Year from 2019-2021") +
   scale_fill_viridis_d() +
   scale_x_discrete(expand = c(0,0)) +
   scale_y_continuous(expand = c(0,0))+
