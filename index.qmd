@@ -35,7 +35,7 @@ lobster_traps <- read_csv(here("data/Lobster_Trap_Counts_All_Years_20210519.csv"
 
 ## Summary of abstract:
 
-This data shows the abundance, size and trap counts of the keystone species California spiny lobster (*Panulirus interruptus*) from Santa Barbara Channel. Two data collection sites are within Marine Protected Areas, while three are outside, to assess the effect of fishing pressure on marine ecosystems.
+This data shows the abundance, size and trap counts of the keystone species California spiny lobster (*Panulirus interruptus*) from Santa Barbara Channel. Two data collection sites are within Marine Protected Areas (MPAs), sites Naples and Isla Vista, while three are outside, being Arroyo Quemado, Mohawk, and Carpinteria, to assess the effect of fishing pressure on marine ecosystems.
 
 ## Visualization
 
@@ -152,7 +152,7 @@ ggplot(data = lobster_traps_fishing_pressure, aes(x = fct_reorder(SITE, COUNT, .
 
 ## Discussion
 
-The size and abundance data shows some differences between sites within MAPs vs sites with fishing activities. From the MPAs: Isla Vista showed the highest abundance, and Naples had the larger ratio of bigger vs smaller lobsters, showing the effectiveness of MPAs.
+The size and abundance data shows some differences between sites within MPAs vs sites with fishing activities. From the sites within the MPAs, Isla Vista showed the highest overall abundance with mostly bigger lobsters. Naples, on the other hand, had the largest ratio of bigger versus smaller lobsters. Additionally, at both of these sites low fishing pressure exclusively was observed, perhaps indicating that due to the low fishing pressure, lobsters were able to live longer and therefore grow bigger. Together, these data show the effectiveness of MPAs.
 
 The trap count data shows that through the years, there are fluctuations in the amount of lobster traps people set. In particular, it appears that years where there were many traps set are followed by years where fewer traps are set, perhaps due to lobster abundance. In 2015 and 2018 for example, fewer traps were set up, but in the years following, 2016 and 2018, there was a peak in the amount of traps set across most sites. Looking at the abundance data, it appears that there were fewer lobsters in 2016 and 2018, in line with there being more traps. Perhaps the lobsters were being caught before they could be counted. The fishing pressure data from 2019-2021 also correlates with the trap count, with the CARP location having a high degree of fishing pressure as well as having many traps set.
 
