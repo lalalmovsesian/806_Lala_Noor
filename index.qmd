@@ -50,8 +50,8 @@ ggtitle("Lobster size frequency in each site") +
   theme_light() +
     theme(legend.position = "bottom",
           legend.title = element_blank()) +
-  scale_fill_viridis_d()
-
+  scale_fill_viridis_d() +
+  theme(plot.title = element_text(hjust = 0.5)) # center the title name
 ```
 
 ### Annual abundance in each site
@@ -69,7 +69,8 @@ ggplot(data = lobsters_summarize, aes(x = YEAR, y = COUNT)) +
     theme(legend.position = "bottom",
           legend.title = element_blank()) +
   scale_x_continuous(expand = c(0,0)) +
-  scale_color_viridis_d()
+  scale_color_viridis_d() +
+  theme(plot.title = element_text(hjust = 0.5)) # center the title name
 ```
 
 ### Lobster large/small count comparison
@@ -94,7 +95,8 @@ scale_fill_viridis_d(option = "plasma") +
   scale_y_continuous(expand = c(0,0)) +
   theme_light() +
     theme(legend.position = "bottom",
-          legend.title = element_blank())
+          legend.title = element_blank()) +
+   theme(plot.title = element_text(hjust = 0.5)) # center the title name
 ```
 
 ### Total amount of traps set per year
@@ -138,13 +140,14 @@ lobster_traps_fishing_pressure <- lobster_traps %>%
 ggplot(data = lobster_traps_fishing_pressure, aes(x = fct_reorder(SITE, COUNT, .fun = sum), y = COUNT, fill = FISHING_PRESSURE)) +
   geom_col() +
   labs(x = "Site",
-       y = "Total Traps",
+       y = "Instances of Fishing Pressure",
        title = "Fishing Pressure by Year from 2019-2021") +
   scale_fill_viridis_d() +
   scale_x_discrete(expand = c(0,0)) +
   scale_y_continuous(expand = c(0,0))+
   theme_bw() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust =1))
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust =1)) +
+  theme(plot.title = element_text(hjust = 0.5)) # center the title name
 ```
 
 ## Discussion
